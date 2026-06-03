@@ -27,6 +27,23 @@ jobs:
           name: Build Docker Image
           command: |
             docker build -t iris-app .
+      
+      - run:
+          name: Docker Login
+          command: |
+            echo "$DOCKER_PASSWORD" | docker login \
+            -u "$DOCKER_USERNAME" \
+            --password-stdin
+
+      - run:
+          name: Build Image
+          command: |
+            docker build -t $DOCKER_USERNAME/iris-app:latest .
+
+      - run:
+          name: Push Image
+          command: |
+            docker push $DOCKER_USERNAME/iris-app:latest
 
 workflows:
   version: 2
