@@ -21,7 +21,7 @@ jobs:
       - run:
           name: Run Training Pipeline
           command: |
-            python3 pipeline/training_pipeline.py
+            python3 -m pipeline.training_pipeline
 
       - run:
           name: Build Docker Image
