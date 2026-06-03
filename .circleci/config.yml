@@ -1,69 +1,36 @@
 version: 2.1
 
-# Define reusable executors or environments
-executors:
-  python-env:
-    docker:
-      - image: cimg/python:3.12 # Using a fast, stable standard convenience image
-    working_directory: ~/repo
-
 jobs:
-  # 1. Job to handle environment setup, verification, and testing
-  build-and-test:
-    executor: python-env
-    steps:
-      - checkout # Pull code from your GitHub repository
+  build:
+    machine: true
 
-      # Restore dependency cache if it exists to speed up pipeline execution
-      - restore_cache:
-          keys:
-            - v1-dependencies-{{ checksum "requirements.txt" }}
-            - v1-dependencies-
+    steps:
+      - checkout
+
+      - run:
+          name: Install Python
+          command: |
+            sudo apt update
+            sudo apt install -y python3-pip
 
       - run:
           name: Install Dependencies
           command: |
-            python -m venv venv
-            source venv/bin/activate
-            pip install --upgrade pip
-            pip install -r requirements.txt
-
-      # Save dependency cache for subsequent runs
-      - save_cache:
-          paths:
-            - ./venv
-          key: v1-dependencies-{{ checksum "requirements.txt" }}
+            pip3 install -r requirements.txt
 
       - run:
-          name: Validate Training Pipeline Script
+          name: Run Training Pipeline
           command: |
-            source venv/bin/activate
-            # Explicitly run verification tests or run pipeline structure validation
-            python pipeline/training_pipeline.py
+            python3 pipeline/training_pipeline.py
 
-  # 2. Job to handle Deployment (e.g., Deploying via Docker or Cloud platforms)
-  deploy:
-    executor: python-env
-    steps:
-      - checkout
-      - setup_remote_docker:
-          version: default
       - run:
-          name: Build and Push/Deploy Application
+          name: Build Docker Image
           command: |
-            echo "Deploying application.py..."
-            # For a production setup, add deployment commands here. E.g.:
-            # docker build -t my-iris-app .
-            # Login and push to cloud registry (AWS ECR, DockerHub, etc.) or trigger cloud platform CLI hooks
+            docker build -t iris-app .
 
-# Orchestrate execution order with Workflows
 workflows:
-  mlops-pipeline:
+  version: 2
+
+  build_workflow:
     jobs:
-      - build-and-test
-      - deploy:
-          requires:
-            - build-and-test # Logical Gate: Run deployment only if builds & scripts pass
-          filters:
-            branches:
-              only: main # Guardrail: Deployments trigger strictly from the main branch
+      - build
