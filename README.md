@@ -23,38 +23,6 @@ An End-to-End MLOps pipeline that automates data preprocessing, model training, 
 
 ---
 
-## 📂 Project Repository Structure
-
-├── .circleci/
-│   └── config.yml             # CircleCI workflow definitions for automated build/test
-├── artifacts/
-│   ├── models/                # Serialized production models and confusion matrices
-│   │   ├── model.pkl
-│   │   └── confusion_martix.png
-│   ├── processed/             # Tokenized and split NumPy arrays / pickles (X_train, y_train, etc.)
-│   └── raw/                   # Immutable raw data source
-│       └── data.csv
-├── notebook/
-│   └── iris.ipynb             # Exploratory Data Analysis & initial prototyping scratchpad
-├── pipeline/
-│   └── training_pipeline.py   # Orchestrator script triggering full processing and training cycles
-├── src/
-│   ├── __init__.py            # Marks directory as a regular Python package
-│   ├── custom_exception.py    # Standardized system error hooks matching sys info
-│   ├── data_processing.py     # Data cleaning, normalization, splitting, and storage layers
-│   ├── logger.py              # Central log collector exporting runtime metadata to '.log' files
-│   └── model_training.py      # Logistic Regression model initiator, compiler, and metrics saver
-├── static/
-│   └── style.css              # Custom styling definitions for the user interface
-├── templates/
-│   └── index.html             # Flask landing page with form inputs for real-time predictions
-├── Dockerfile                 # Blueprint for building the isolated container image
-├── application.py             # Flask Web Server application entry point
-├── requirements.txt           # Project dependencies pinboard
-└── setup.py                   # Metadata packaging descriptor script for building installable modules
-
----
-
 ## 🛠️ Installation & Local Setup
 
 ### Prerequisites
