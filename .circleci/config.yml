@@ -31,19 +31,19 @@ jobs:
       - run:
           name: Docker Login
           command: |
-            echo "$DOCKER_PASSWORD" | docker login \
-            -u "$DOCKER_USERNAME" \
+            echo "$DOCKERHUB_PASS" | docker login \
+            -u "$DOCKERHUB_USER" \
             --password-stdin
 
       - run:
           name: Build Image
           command: |
-            docker build -t $DOCKER_USERNAME/iris-app:latest .
+            docker build -t $DOCKERHUB_USER/iris-app:latest .
 
       - run:
           name: Push Image
           command: |
-            docker push $DOCKER_USERNAME/iris-app:latest
+            docker push $DOCKERHUB_USER/iris-app:latest
 
 workflows:
   version: 2
@@ -51,4 +51,3 @@ workflows:
   build_workflow:
     jobs:
       - build
-      
